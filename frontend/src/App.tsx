@@ -1,8 +1,6 @@
 import React, { useEffect, useContext, useCallback } from "react";
 
 import Header from "./Components/Headers";
-import Products from "./Components/ProductTypes/Products";
-import Items from "./Components/ProductTypes/Items";
 import Context from "./Context";
 
 import styles from "./App.module.scss";
@@ -88,15 +86,7 @@ const App = () => {
         <Header />
         {linkSuccess && (
           <>
-            {isPaymentInitiation && (
-              <Products />
-            )}
-            {isItemAccess && (
-              <>
-                <Products />
-                <Items />
-              </>
-            )}
+            <div>Hello World!</ div>
           </>
         )}
       </div>
