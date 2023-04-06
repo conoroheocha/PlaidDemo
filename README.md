@@ -1,3 +1,17 @@
+#Plaid Demo 
+
+This repo is an adaption of Plaid's quickstart app, which modifies the basic functionality to produce a simple table rather than an interface from where API calls can be made.  The setup instructions are the same as those of the quickstart app which are given below:
+ 
+ 
+
+
+
+
+
+
+
+
+
 # Plaid quickstart
 
 This repository accompanies Plaid's [**quickstart guide**][quickstart].
