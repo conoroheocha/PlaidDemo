@@ -1,6 +1,7 @@
 import { createContext, useReducer, Dispatch, ReactNode } from "react";
 
 interface QuickstartState {
+  balances: Array<Object>;
   linkSuccess: boolean;
   isItemAccess: boolean;
   isPaymentInitiation: boolean;
@@ -18,6 +19,7 @@ interface QuickstartState {
 }
 
 const initialState: QuickstartState = {
+  balances: [],
   linkSuccess: false,
   isItemAccess: true,
   isPaymentInitiation: false,

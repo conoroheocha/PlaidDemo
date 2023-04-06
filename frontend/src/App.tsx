@@ -1,39 +1,25 @@
-import React, { useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 
 import Header from "./Components/Headers";
 import Context from "./Context";
 
+import BalanceTable from "./BalanceTable";
+
 import styles from "./App.module.scss";
+import Products from "./Components/ProductTypes/Products";
+import Endpoint from "./Components/Endpoint";
+import {
+  balanceCategories,
+  transformBalanceData,
+  BalanceDataItem
+} from "./dataUtilities";
 
 const App = () => {
-  const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } = useContext(Context);
-
-  const getInfo = useCallback(async () => {
-    const response = await fetch("/api/info", { method: "POST" });
-    if (!response.ok) {
-      dispatch({ type: "SET_STATE", state: { backend: false } });
-      return { paymentInitiation: false };
-    }
-    const data = await response.json();
-    const paymentInitiation: boolean = data.products.includes(
-      "payment_initiation"
-    );
-    dispatch({
-      type: "SET_STATE",
-      state: {
-        products: data.products,
-        isPaymentInitiation: paymentInitiation,
-      },
-    });
-    return { paymentInitiation };
-  }, [dispatch]);
+  const { linkSuccess, balances, dispatch } = useContext(Context);
 
   const generateToken = useCallback(
-    async (isPaymentInitiation) => {
-      // Link tokens for 'payment_initiation' use a different creation flow in your backend.
-      const path = isPaymentInitiation
-        ? "/api/create_link_token_for_payment"
-        : "/api/create_link_token";
+    async () => {
+      const path = "/api/create_link_token";
       const response = await fetch(path, {
         method: "POST",
       });
@@ -63,7 +49,6 @@ const App = () => {
 
   useEffect(() => {
     const init = async () => {
-      const { paymentInitiation } = await getInfo(); // used to determine which path to take when generating token
       // do not generate a new token for OAuth redirect; instead
       // setLinkToken from localStorage
       if (window.location.href.includes("?oauth_state_id=")) {
@@ -75,10 +60,38 @@ const App = () => {
         });
         return;
       }
-      generateToken(paymentInitiation);
+      generateToken();
     };
     init();
-  }, [dispatch, generateToken, getInfo]);
+    getData();
+  }, [dispatch, generateToken]);
+
+  const [showTable, setShowTable] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+  // const rows = balances.map((item) =>
+  //     Row(item.keys, item.value)
+  // );
+
+  const getData = async () => {
+    console.log("Calling");
+    const response = await fetch("/api/balance", { method: "GET" });
+    const data = await response.json();
+    if (data.error != null) {
+      setIsLoading(false);
+      return;
+    }
+    setShowTable(true);
+    console.log(data)
+    setData(data)
+  };
+
+  const test1: BalanceDataItem = { balance: "1000", name: "checking", mask: "N/A", subtype: null }
+  const testData =
+    [
+      test1,
+      test1
+    ];
 
   return (
     <div className={styles.App}>
@@ -86,7 +99,7 @@ const App = () => {
         <Header />
         {linkSuccess && (
           <>
-            <div>Hello World!</ div>
+            <BalanceTable showTable={true} accountList={testData} />
           </>
         )}
       </div>
