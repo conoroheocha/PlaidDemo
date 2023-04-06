@@ -6,13 +6,6 @@ import Context from "./Context";
 import BalanceTable from "./BalanceTable";
 
 import styles from "./App.module.scss";
-import Products from "./Components/ProductTypes/Products";
-import Endpoint from "./Components/Endpoint";
-import {
-  balanceCategories,
-  transformBalanceData,
-  BalanceDataItem
-} from "./dataUtilities";
 
 const App = () => {
   const { linkSuccess, balances, dispatch } = useContext(Context);
@@ -67,31 +60,21 @@ const App = () => {
   }, [dispatch, generateToken]);
 
   const [showTable, setShowTable] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [accountData, setAccountData] = useState<any[]>([]);
   // const rows = balances.map((item) =>
   //     Row(item.keys, item.value)
   // );
 
   const getData = async () => {
-    console.log("Calling");
     const response = await fetch("/api/balance", { method: "GET" });
-    const data = await response.json();
-    if (data.error != null) {
-      setIsLoading(false);
+    const responseData = await response.json();
+    if (responseData.error != null) {
       return;
     }
     setShowTable(true);
-    console.log(data)
-    setData(data)
-  };
 
-  const test1: BalanceDataItem = { balance: "1000", name: "checking", mask: "N/A", subtype: null }
-  const testData =
-    [
-      test1,
-      test1
-    ];
+    setAccountData(responseData.accounts)
+  };
 
   return (
     <div className={styles.App}>
@@ -99,7 +82,7 @@ const App = () => {
         <Header />
         {linkSuccess && (
           <>
-            <BalanceTable showTable={true} accountList={testData} />
+            <BalanceTable showTable={showTable} accountList={accountData} />
           </>
         )}
       </div>
