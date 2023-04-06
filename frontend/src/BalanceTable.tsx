@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import Table from 'react-bootstrap/Table';
-
+// structure of the data as received from the API
 interface BalanceData {
     balances:
     { current: number, },
@@ -18,7 +17,7 @@ const BalanceTable: React.FC<Data> = (props: Data) => {
     return (
         <div>
             {props.showTable &&
-                (<Table>
+                (<table>
                     <thead>
                         <tr>
                             <th>Account</th>
@@ -35,7 +34,7 @@ const BalanceTable: React.FC<Data> = (props: Data) => {
                             )
                         })}
                     </tbody>
-                </Table>)}
+                </table>)}
         </ div>
     );
 }

@@ -8,7 +8,7 @@ import BalanceTable from "./BalanceTable";
 import styles from "./App.module.scss";
 
 const App = () => {
-  const { linkSuccess, balances, dispatch } = useContext(Context);
+  const { linkSuccess, dispatch } = useContext(Context);
 
   const generateToken = useCallback(
     async () => {
@@ -59,12 +59,12 @@ const App = () => {
     getData();
   }, [dispatch, generateToken]);
 
+
+  //state variables/functions
   const [showTable, setShowTable] = useState(false);
   const [accountData, setAccountData] = useState<any[]>([]);
-  // const rows = balances.map((item) =>
-  //     Row(item.keys, item.value)
-  // );
 
+  //function to get the data, called once the link has completed
   const getData = async () => {
     const response = await fetch("/api/balance", { method: "GET" });
     const responseData = await response.json();
@@ -72,7 +72,6 @@ const App = () => {
       return;
     }
     setShowTable(true);
-
     setAccountData(responseData.accounts)
   };
 
